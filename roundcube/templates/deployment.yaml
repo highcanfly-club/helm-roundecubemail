@@ -57,7 +57,7 @@ spec:
             - name: ROUNDCUBEMAIL_SMTP_SERVER
               value: {{ quote .Values.roundcube.smtpServer }}
             - name: ROUNDCUBEMAIL_SMTP_PORT
-              values: {{quote .Values.roundcube.smtpPort}}
+              value: {{quote .Values.roundcube.smtpPort}}
             - name: ROUNDCUBEMAIL_DB_TYPE
               value: {{ quote .Values.roundcube.dbType }}
             - name: ROUNDCUBEMAIL_DB_HOST
