@@ -86,12 +86,13 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
     \$config['spellcheck_engine'] = 'pspell';
     " > config/config.inc.php
     if [ -n ${ROUNDCUBEMAIL_FORWARD_AUTH} ]; then
-    echo "\$config['smtp_user'] = '%u';
+    echo "    \$config['smtp_user'] = '%u';
     \$config['smtp_pass'] = '%p';
     " >> config/config.inc.php
     fi
     echo "include(__DIR__ . '/config.docker.inc.php');
     " >> config/config.inc.php
+
   elif ! grep -q "config.docker.inc.php" config/config.inc.php; then
     echo "include(__DIR__ . '/config.docker.inc.php');" >> config/config.inc.php
   fi
@@ -149,6 +150,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
     which apt-get && apt-get install -y $ASPELL_PACKAGES
     which apk && apk add --no-cache $ASPELL_PACKAGES
   fi
+
 fi
 
 exec "$@"
