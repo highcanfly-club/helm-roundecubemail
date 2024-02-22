@@ -90,6 +90,11 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
     \$config['smtp_pass'] = '%p';
     " >> config/config.inc.php
     fi
+    if [ -n ${ROUNDCUBEMAIL_MEMCACHED_SESSION} ]; then
+    echo "    \$config['session_storage'] = 'memcache';
+    \$config['memcache_hosts'] = array('${ROUNDCUBEMAIL_MEMCACHED_HOST}');
+    " >> config/config.inc.php
+    fi
     echo "include(__DIR__ . '/config.docker.inc.php');
     " >> config/config.inc.php
 
