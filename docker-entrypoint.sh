@@ -71,9 +71,9 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
   : "${ROUNDCUBEMAIL_SKIN:=elastic}"
   : "${ROUNDCUBEMAIL_TEMP_DIR:=/tmp/roundcube-temp}"
   : "${ROUNDCUBEMAIL_REQUEST_PATH:=/}"
-
+  : "${ROUNDCUBEMAIL_MEMCACHED_PORT:=11211}"
+  : "${ROUNDCUBEMAIL_DES_KEY:=$(head /dev/urandom | base64 | head -c 24)}"
   if [ ! -e config/config.inc.php ]; then
-    GENERATED_DES_KEY=`head /dev/urandom | base64 | head -c 24`
     touch config/config.inc.php
 
     echo "Write root config to $PWD/config/config.inc.php"
@@ -81,7 +81,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
     \$config['plugins'] = [];
     \$config['log_driver'] = 'stdout';
     \$config['zipdownload_selection'] = true;
-    \$config['des_key'] = '${GENERATED_DES_KEY}';
+    \$config['des_key'] = '${ROUNDCUBEMAIL_DES_KEY}';
     \$config['enable_spellcheck'] = true;
     \$config['spellcheck_engine'] = 'pspell';
     " > config/config.inc.php
@@ -92,7 +92,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
     fi
     if [ -n ${ROUNDCUBEMAIL_MEMCACHED_SESSION} ]; then
     echo "    \$config['session_storage'] = 'memcache';
-    \$config['memcache_hosts'] = array('${ROUNDCUBEMAIL_MEMCACHED_HOST}');
+    \$config['memcache_hosts'][0] = '${ROUNDCUBEMAIL_MEMCACHED_HOST}:${ROUNDCUBEMAIL_MEMCACHED_PORT}';
     " >> config/config.inc.php
     fi
     echo "include(__DIR__ . '/config.docker.inc.php');
